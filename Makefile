@@ -1,22 +1,18 @@
 CC = gcc
 
-CFLAGS = -g -Wall -O2 \
+CFLAGS =-std=gnu99 -g -Wall -O2 \
 -lrt \
--gdwarf-2 \
--DNPARTITION
+-gdwarf-2
 
-SUITESPARSE = /home/yihuiguang/tools/SuiteSparse-5.10.1
+OPENBLAS = $(CURDIR)/OpenBLAS-0.3.18
+SUITESPARSE = $(CURDIR)/SuiteSparse-5.10.1
 
 LPATH = $(SUITESPARSE)/lib
-LIBS = $(LPATH)/libcholmod.so \
-$(LPATH)/libamd.so \
-$(LPATH)/libcolamd.so \
-$(LPATH)/libcamd.so \
-$(LPATH)/libccolamd.so \
-$(LPATH)/libsuitesparseconfig.so \
+LIBS = -L$(LPATH) -Wl,-rpath=$(LPATH) -lcholmod -lamd -lcolamd -lcamd -lccolamd -lsuitesparseconfig 
 
 CHOLMOD = $(SUITESPARSE)/CHOLMOD
-HEADER_DIR = $(CHOLMOD)/Include
+CHOLMOD_HEADER_DIR = $(CHOLMOD)/Include
+HEADER_DIR = $(SUITESPARSE)/include #$(CHOLMOD)/Include
 CONFIG_HEADER_DIR = $(SUITESPARSE)/SuiteSparse_config
 
 OBJ_DIR = .
@@ -24,6 +20,7 @@ OBJ_DIR = .
 BIN_DIR = .
 
 INCLUDES = -I$(HEADER_DIR) \
+-I$(CHOLMOD_HEADER_DIR) \
 -I$(CONFIG_HEADER_DIR)
 
 SRCS = $(shell ls *.c)
@@ -36,13 +33,21 @@ APP = iqsle
 
 RM = rm -f
 
-all: $(APP)
+all: need $(APP)
 
-$(APP): $(OBJS)
+need: 
+	( cd $(OPENBLAS) && make && make PREFIX=$(OPENBLAS) install )
+	( cd $(SUITESPARSE) && make BLAS="-L$(OPENBLAS)/lib -lopenblas" )
+
+$(APP): $(OBJS) 
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/$(APP) $(OBJS_BUILD) $(LIBS) -lm
 
-%.o: %.c $(HEADER_DIR)/*.h $(CONFIG_HEADER_DIR)/*.h
+%.o: %.c 
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(OBJ_DIR)/$@
 
 clean:
 	$(RM) $(OBJS_BUILD) $(APP)
+
+uninstall:
+	( cd $(OPENBLAS) && make clean)
+	( cd $(SUITESPARSE) && make uninstall)
