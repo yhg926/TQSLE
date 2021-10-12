@@ -1,5 +1,5 @@
 *.o
 *.so.*
 *.so
-Openblas*/*
+OpenBLAS*/*
 SuiteSparse*/*
