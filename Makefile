@@ -57,4 +57,4 @@ install:
 uninstall:
 	( cd $(OPENBLAS) && make clean)
 	( cd $(SUITESPARSE) && make uninstall)
-	$(RM) $(CURDIR)/bin/
+	$(RM) $(CURDIR)/bin/*
