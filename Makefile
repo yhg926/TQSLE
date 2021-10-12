@@ -33,7 +33,9 @@ APP = iqsle
 
 RM = rm -f
 
-all: need $(APP)
+CP = cp 
+
+all: need $(APP) install clean
 
 need: 
 	( cd $(OPENBLAS) && make && make PREFIX=$(OPENBLAS) install )
@@ -48,6 +50,10 @@ $(APP): $(OBJS)
 clean:
 	$(RM) $(OBJS_BUILD) $(APP)
 
+install:
+	$(CP) $(APP) $(CURDIR)/bin
+
 uninstall:
 	( cd $(OPENBLAS) && make clean)
 	( cd $(SUITESPARSE) && make uninstall)
+	$(RM) $(CURDIR)/bin/*
