@@ -39,7 +39,7 @@ all: need $(APP) install clean
 
 need: 
 	( cd $(OPENBLAS) && make && make PREFIX=$(OPENBLAS) install )
-	( cd $(SUITESPARSE) && make BLAS="-L$(OPENBLAS)/lib -lopenblas" )
+	( cd $(SUITESPARSE) && make BLAS="-L$(OPENBLAS)/lib -Wl,-rpath=$(OPENBLAS)/lib -lopenblas" )
 
 $(APP): $(OBJS) 
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/$(APP) $(OBJS_BUILD) $(LIBS) -lm
@@ -51,9 +51,10 @@ clean:
 	$(RM) $(OBJS_BUILD) $(APP)
 
 install:
-	$(CP) $(APP) $(CURDIR)/bin
+	mkdir -p $(CURDIR)/bin/
+	$(CP) $(APP) $(CURDIR)/bin/
 
 uninstall:
 	( cd $(OPENBLAS) && make clean)
 	( cd $(SUITESPARSE) && make uninstall)
-	$(RM) $(CURDIR)/bin/*
+	$(RM) $(CURDIR)/bin/
