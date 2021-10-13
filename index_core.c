@@ -24,7 +24,6 @@ trscrpt_ref_arr_t *Read_fas_trscrpt (char *path, int min_len ){
 	while ( ( (c = fgetc(fs)) != '>') && (c != EOF)  );
 
 	for( refnum = 0; c != EOF ; refindex++ ){
-		
 		if (refnum > MAX_Ref_NUM) { printf("# references exceed MAX_Ref_NUM %d: aborted!\n", MAX_Ref_NUM); exit(1); }
 
 		if( (c=='>') && (c != EOF) ) {
@@ -38,13 +37,11 @@ trscrpt_ref_arr_t *Read_fas_trscrpt (char *path, int min_len ){
                 }				
 				line[pos_name] = c ;		
 			};
-
 			if (c == '\n') {
 				(trscrpt_ref_arr->trscrpt_ref_idx)[refnum].name = realloc ( (trscrpt_ref_arr->trscrpt_ref_idx)[refnum].name, pos_name + 1 );
-				char *temp = strchr(line,' '); *temp = '\0';
+				char *temp = strchr(line,' '); if (temp != NULL) *temp = '\0';
 				strncpy((trscrpt_ref_arr->trscrpt_ref_idx)[refnum].name, line, pos_name);		
 			} 
-			
 			for ( pos_name = 0 ; ( (c = fgetc(fs)) != '>') && (c != EOF) ; ){
 				if(pos_name > MAX_TRANSCRIPTS_LEN){
 					 printf("%dth transcript %s exceed MAX_TRANSCRIPTS_LEN %d: aborted\n", refindex + 1,
@@ -56,7 +53,6 @@ trscrpt_ref_arr_t *Read_fas_trscrpt (char *path, int min_len ){
 					pos_name++;
 				}
 			}
-			
 			if (pos_name < min_len) {
 				nskip++;
 				printf("skipped %dth transcript: %s due to length %d is shorter than MIN_LEN %d\n", refindex + 1, 
@@ -68,7 +64,7 @@ trscrpt_ref_arr_t *Read_fas_trscrpt (char *path, int min_len ){
 			strncpy((trscrpt_ref_arr->trscrpt_ref_idx)[refnum].seq, line, pos_name);
 			((trscrpt_ref_arr->trscrpt_ref_idx)[refnum].len) = pos_name;
 			refnum++;	
-		};					
+		};
 	}
 
 	trscrpt_ref_arr->n = refnum;
