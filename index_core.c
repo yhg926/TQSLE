@@ -368,7 +368,6 @@ Kref_mtx_t* build_Kref_mtx (ext_btref_kmer_index_t*  ext_btref_kmer_index, tref_
     int readl = indexProperty->readl;
     int abs_pos,tid,t_start,tlen,t_pos,wght;
 
-	printf("begin to build kmer_Twght_mtx\n");
     for (int i = 0; i < uniq_kmer_n; i++ )  {
         abs_pos = abs(tref_uniq_kmer_pos[i]) - 1 ;
         tid = btref_kmer_index[abs_pos].tid;
