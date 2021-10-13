@@ -55,8 +55,7 @@ trscrpt_ref_arr_t *Read_fas_trscrpt (char *path, int min_len ){
 			}
 			if (pos_name < min_len) {
 				nskip++;
-				printf("skipped %dth transcript: %s due to length %d is shorter than MIN_LEN %d\n", refindex + 1, 
-					(trscrpt_ref_arr->trscrpt_ref_idx)[refnum].name, pos_name, min_len);
+				//printf("skipped %dth transcript: %s due to length %d is shorter than MIN_LEN %d\n", refindex + 1, (trscrpt_ref_arr->trscrpt_ref_idx)[refnum].name, pos_name, min_len);
 				continue;
 			}
 
@@ -70,7 +69,7 @@ trscrpt_ref_arr_t *Read_fas_trscrpt (char *path, int min_len ){
 	trscrpt_ref_arr->n = refnum;
 	free(line);
 
-	printf("total %d references found, %d is effective, %d is skipped due to short length\n",refindex,refnum,nskip);
+	printf("total %d references found, %d is effective, %d is skipped due to shorter than fragment length (%d)\n",refindex,refnum,nskip, min_len);
 
 	return(trscrpt_ref_arr); 			
 }
@@ -357,7 +356,7 @@ Kref_mtx_t* build_Kref_mtx (ext_btref_kmer_index_t*  ext_btref_kmer_index, tref_
         }
     }
 	free(kmer_pos_ht);
-	printf("tref_uniq_kmer_pos builed and kmer_pos_ht: %ldM memory freed\n", sizeof(int)*htsize/1024/1024);
+	printf("\t< tref_uniq_kmer_pos builed, free kmer_pos_ht >\t%ldM released\n", sizeof(int)*htsize/1024/1024);
     int *Tsum_wghts = calloc(noT, sizeof(int));
     int *kmer_tids = malloc(npos*sizeof(int));
     double *kmer_wgts = malloc(npos*sizeof(double));
@@ -411,7 +410,7 @@ Kref_mtx_t* build_Kref_mtx (ext_btref_kmer_index_t*  ext_btref_kmer_index, tref_
     }
 	free(btref_kmer_index);
 	free(kmer_pos_mtx); // all ext_btref_kmer_index freed
-	printf("kmer_Twght_mtx builded and btref_kmer_index:%dM memory freed and kmer_pos_mtx freed\n",btref->n * 8/1024/1024);
+	printf("\t< kmer_Twght_mtx builded, free btref_kmer_index and kmer_pos_mtx >\t%dM released\n",btref->n * 8/1024/1024);
     /*normalize kmer_wgts[i] by ith trnscript total wght*/
 
     for(int i = 0; i < n_wgts ; i++){
@@ -440,7 +439,7 @@ Kref_mtx_t* build_Kref_mtx (ext_btref_kmer_index_t*  ext_btref_kmer_index, tref_
 	Kref_mtx->kmer_Twght_mtx = kmer_Twght_mtx;
 	Kref_mtx->Kref = Kref;	
 			
-	printf("ReferenceKmer-TransctriptID sparse Matrix builded, size: %d x %d, nnz=%d\n",uniq_kmer_n,noT,n_wgts );
+	printf("\t< ReferenceKmer-TransctriptID sparse Matrix builded >\tsize: %d x %d, nnz=%d\n",uniq_kmer_n,noT,n_wgts );
 	return(Kref_mtx);
 }
 /*convert kmer_Twght_mtx to cholmod_sparse compatible matrix, row to column; */

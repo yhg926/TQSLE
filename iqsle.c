@@ -110,6 +110,12 @@ int index_cmd_wrapper (struct argp_state *state){
 
     argp_parse (&indexArgp, argc, argv, ARGP_IN_ORDER, &argc, &index_info);
 
+	printf("\n Parameters List:\n");
+	printf("\tFragment Length: %d\n", indexProperty.fragl);
+	printf("\tRead Length: %d\n", indexProperty.readl);
+	printf("\tKmer Length (K): %d\n", indexProperty.K);
+	printf("\tI coefficient (lamda): %lf\n\v", indexProperty.lamda);
+
     return index_cmd( &indexProperty);
 }
 
