@@ -15,9 +15,9 @@ CHOLMOD_HEADER_DIR = $(CHOLMOD)/Include
 HEADER_DIR = $(SUITESPARSE)/include #$(CHOLMOD)/Include
 CONFIG_HEADER_DIR = $(SUITESPARSE)/SuiteSparse_config
 
-OBJ_DIR = .
+OBJ_DIR = $(CURDIR)/bin
 
-BIN_DIR = .
+BIN_DIR = $(CURDIR)/bin
 
 INCLUDES = -I$(HEADER_DIR) \
 -I$(CHOLMOD_HEADER_DIR) \
@@ -35,11 +35,14 @@ RM = rm -f
 
 CP = cp 
 
-all: need $(APP) install clean
+MKDIR = mkdir -p
+
+all: need $(APP) clean
 
 need: 
 	( cd $(OPENBLAS) && make && make PREFIX=$(OPENBLAS) install )
 	( cd $(SUITESPARSE) && make BLAS="-L$(OPENBLAS)/lib -Wl,-rpath=$(OPENBLAS)/lib -lopenblas" )
+	$(MKDIR) $(OBJ_DIR) $(BIN_DIR) 
 
 $(APP): $(OBJS) 
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/$(APP) $(OBJS_BUILD) $(LIBS) -lm
@@ -48,13 +51,9 @@ $(APP): $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(OBJ_DIR)/$@
 
 clean:
-	$(RM) $(OBJS_BUILD) $(APP)
-
-install:
-	mkdir -p $(CURDIR)/bin/
-	$(CP) $(APP) $(CURDIR)/bin/
+	$(RM) $(OBJS_BUILD)
 
 uninstall:
 	( cd $(OPENBLAS) && make clean)
 	( cd $(SUITESPARSE) && make uninstall)
-	$(RM) $(CURDIR)/bin/*
+	$(RM) $(BIN_DIR)/*
