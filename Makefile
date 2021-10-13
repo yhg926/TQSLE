@@ -4,8 +4,35 @@ CFLAGS =-std=gnu99 -g -Wall -O2 \
 -lrt \
 -gdwarf-2
 
+BLAS_OPT =  
+
+MKL_LIB =
+MKL_IOMP5 =
+BLAS_LIB =
+
 OPENBLAS = $(CURDIR)/OpenBLAS-0.3.18
 SUITESPARSE = $(CURDIR)/SuiteSparse-5.10.1
+
+ifdef MKL_LIB
+	ifdef MKL_IOMP5
+		BLAS_OPT = mkl
+		BLAS_CMD = -L$(MKL_LIB) -Wl,-rpath=$(MKL_LIB) -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -L$(MKL_IOMP5) -Wl,-rpath=$(MKL_IOMP5) -liomp5 -lpthread -lm
+	endif
+endif
+
+ifndef BLAS_OPT
+	ifdef BLAS_LIB
+		BLAS_OPT = blas
+		BLAS_CMD = -L$(BLAS_LIB) -Wl,-rpath=$(BLAS_LIB) -lopenblas
+	endif
+endif
+
+ifndef BLAS_OPT
+	BLAS_OPT = local
+	BLAS_LIB = $(OPENBLAS)/lib
+	BLAS_CMD = -L$(BLAS_LIB) -Wl,-rpath=$(BLAS_LIB) -lopenblas
+endif
+
 
 LPATH = $(SUITESPARSE)/lib
 LIBS = -L$(LPATH) -Wl,-rpath=$(LPATH) -lcholmod -lamd -lcolamd -lcamd -lccolamd -lsuitesparseconfig 
@@ -39,9 +66,11 @@ MKDIR = mkdir -p
 
 all: need $(APP) clean
 
-need: 
+need:  
+ifeq ($(BLAS_OPT),local)
 	( cd $(OPENBLAS) && make && make PREFIX=$(OPENBLAS) install )
-	( cd $(SUITESPARSE) && make BLAS="-L$(OPENBLAS)/lib -Wl,-rpath=$(OPENBLAS)/lib -lopenblas" )
+endif
+	( cd $(SUITESPARSE) && make BLAS="$(BLAS_CMD)" )
 	$(MKDIR) $(OBJ_DIR) $(BIN_DIR) 
 
 $(APP): $(OBJS) 
