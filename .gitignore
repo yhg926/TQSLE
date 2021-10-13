@@ -1,4 +1,6 @@
 *.o
 *.so.*
 *.so
+*.a
+*.la
 OpenBLAS*/*
