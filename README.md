@@ -1,6 +1,8 @@
 # IQSLEv1
 IQSLEv1 released
 
+Current version is based on x86_64 linux system 
+
 Dependencies:
 1. gcc && gfortran
 2. OpenBlAS or intel mkl BLAS (Recommended)
