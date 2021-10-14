@@ -86,3 +86,6 @@ uninstall:
 	( cd $(OPENBLAS) && make clean)
 	( cd $(SUITESPARSE) && make uninstall)
 	$(RM) $(BIN_DIR)/*
+
+check:
+	( ldd $(BIN_DIR)/$(APP) | grep 'mkl\|blas')
