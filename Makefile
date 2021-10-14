@@ -88,4 +88,4 @@ uninstall:
 	$(RM) $(BIN_DIR)/*
 
 check:
-	( ldd $(BIN_DIR)/$(APP) | grep 'mkl\|blas')
+	( ldd $(BIN_DIR)/$(APP) | grep 'mkl\|blas\|not found')
