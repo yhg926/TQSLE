@@ -1,6 +1,6 @@
 CC = gcc
 
-CFLAGS =-std=gnu99 -g -Wall -O2 \
+CFLAGS =-std=gnu99 -g -Wall -O2 -fopenmp \
 -lrt \
 -gdwarf-2
 

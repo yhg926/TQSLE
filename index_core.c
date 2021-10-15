@@ -39,7 +39,12 @@ trscrpt_ref_arr_t *Read_fas_trscrpt (char *path, int min_len ){
 			};
 			if (c == '\n') {
 				(trscrpt_ref_arr->trscrpt_ref_idx)[refnum].name = realloc ( (trscrpt_ref_arr->trscrpt_ref_idx)[refnum].name, pos_name + 1 );
-				char *temp = strchr(line,' '); if (temp != NULL) *temp = '\0';
+				char *temp = strchr(line,' '); 
+				if (temp != NULL) {*temp = '\0';}
+				else{
+					temp = strchr(line,'|');
+					if (temp != NULL) {*temp = '\0';}
+				}
 				strncpy((trscrpt_ref_arr->trscrpt_ref_idx)[refnum].name, line, pos_name);		
 			} 
 			for ( pos_name = 0 ; ( (c = fgetc(fs)) != '>') && (c != EOF) ; ){
