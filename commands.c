@@ -80,7 +80,7 @@ int quant_cmd (quantProperty_t * quantProperty) {
     Kref_t *Kref = read_Kref(path_holder);
 
     basis_Kref_t* basis_Kref = build_basisKref(btref,Kref);
-    gettimeofday(&t1, NULL); printf("\t< basis_Kref loaded >\t%ld s\n", t2.tv_sec - t1.tv_sec);
+    gettimeofday(&t2, NULL); printf("\t< basis_Kref loaded >\t%ld s\n", t2.tv_sec - t1.tv_sec);
 
     double *db = create_b (btref, basis_Kref, quantProperty->num_remaining_args, quantProperty->remaining_args);
 
