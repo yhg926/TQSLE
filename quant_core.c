@@ -59,13 +59,7 @@ int K = basis_Kref->K;
 int comp_bittl = 64 - 2*K;
 int crvsaddmove = 2*K - 2;
 llong tupmask = _64MASK >> comp_bittl;
-//llong tuple, crvstuple, unituple; 
-//int base;
-//char seq[FQ_LEN];
-//char qual[FQ_LEN];
-//char ch;
 FILE *fh;
-//int basenum = 0; 
 
 int bsize = basis_Kref->Kref_size;
 double *b = calloc(bsize,sizeof(double));
