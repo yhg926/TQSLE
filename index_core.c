@@ -6,7 +6,7 @@
 #include "cholmod.h"
 #include "IO.h"
 
-#define MAX_TRANSCRIPTS_LEN 200000
+#define MAX_TRANSCRIPTS_LEN 500000
 #define MAX_Ref_NUM 1000000
 
 trscrpt_ref_arr_t *Read_fas_trscrpt (char *path, int min_len ){
