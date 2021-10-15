@@ -10,10 +10,14 @@ Dependencies:
 
 Install:
 1. If intel mkl is available
-  make MKL_LIB=dir_path_contain_your_mkl_lib MKL_IOMP5=dir_path_contain_your_mkl_iomp5
-
+```
+make MKL_LIB=dir_path_contain_your_mkl_lib MKL_IOMP5=dir_path_contain_your_mkl_iomp5
+```
 2. If OpenBLAS is available
-  make BLAS_LIB=dir_path_contain_your_openblas
-
+```
+make BLAS_LIB=dir_path_contain_your_openblas
+```
 3. Use OpenBLAS in the repo
-  make
+```
+make
+```
