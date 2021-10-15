@@ -5,7 +5,7 @@ Current version is based on x86_64 linux system
 
 Dependencies:
 1. gcc && gfortran
-2. OpenBlAS or intel mkl BLAS (Recommended)
+2. intel mkl BLAS (Recommended) or OpenBlAS or native BLAS (not Recommended)
 3. SuiteSparse (need CHOLMOD modular)
 
 Install:
