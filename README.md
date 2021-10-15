@@ -13,7 +13,7 @@ Install:
 ```
 make MKL_LIB=dir_path_contain_your_mkl_lib MKL_IOMP5=dir_path_contain_your_mkl_iomp5
 ```
-2. If OpenBLAS is available
+2. If OpenBLAS/other BLAS is available
 ```
 make BLAS_LIB=dir_path_contain_your_openblas
 ```
