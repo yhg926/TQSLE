@@ -88,6 +88,7 @@ int quant_cmd (quantProperty_t * quantProperty) {
     cholmod_start(c);
     int size = basis_Kref->Kref_size ;
     cholmod_dense *b = make_cholmod_dense(db, size , c);
+	gettimeofday(&t2, NULL); printf("\t< b created >\t%ld s\n", t2.tv_sec - t1.tv_sec);
 
 	sprintf(path_holder,"%s/%s",quantProperty->indexpath, kmer_Twght_mtx_f);
     kmer_Twght_mtx_t* kmer_Twght_mtx = read_kmer_Twght_mtx(path_holder);
@@ -104,7 +105,7 @@ int quant_cmd (quantProperty_t * quantProperty) {
     cholmod_factor *L = cholmod_factor_read(path_holder,c);
     printf("\t < L loaded >\n");
     cholmod_dense *rslt = cholmod_solve (CHOLMOD_A, L, Atb, c) ;
-    gettimeofday(&t2, NULL); printf("\t < x get sloved >\t%ld s\n",  t2.tv_sec - t1.tv_sec);
+    gettimeofday(&t2, NULL); printf("\t< x get sloved >\t%ld s\n",  t2.tv_sec - t1.tv_sec);
 	cholmod_finish(c);	
 
 	//printf results
