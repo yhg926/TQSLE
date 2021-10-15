@@ -11,7 +11,7 @@ extern const char factorL_f[] ;
 extern const char abundance_f[] ;
 
 int fprint_tref_namelen (char *, trscrpt_ref_arr_t *);
-int fprint_abundance (quantProperty_t *, int, double *);
+int fprint_abundance (quantProperty_t *, int, double *, int);
 int write_btref( char *, tref_cat_binary_t * );
 tref_cat_binary_t * read_btref(char *) ;
 

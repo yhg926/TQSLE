@@ -108,8 +108,8 @@ int quant_cmd (quantProperty_t * quantProperty) {
     gettimeofday(&t2, NULL); printf("\t< x get sloved >\t%ld s\n",  t2.tv_sec - t1.tv_sec);
 	cholmod_finish(c);	
 
-	//printf results
-	fprint_abundance (quantProperty, rslt->nrow, rslt->x);
+	//printf results (set neg_fix to 1 to correct negative value)
+	fprint_abundance (quantProperty, rslt->nrow, rslt->x, 1);
 
     return(1);
 }

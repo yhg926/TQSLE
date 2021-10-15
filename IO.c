@@ -26,7 +26,7 @@ int fprint_tref_namelen (char *tnamelen_fout, trscrpt_ref_arr_t *tref_arr){
 	return(1);
 }
 
-int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x){
+int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x, int neg_fix){
 
     char line [1024];
 
@@ -41,7 +41,9 @@ int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x){
     for(int i = 0; i< nrow ; i++ ){
         fgets(line, 1024, tname_fh);
 		*(strchr(line, '\n')) = '\0';
-	
+
+		if(neg_fix && x[i] < 0) x[i] = 0 ; 
+			
         fprintf(fout,"%s\t%lf\n",line, x[i]);
     }
 
