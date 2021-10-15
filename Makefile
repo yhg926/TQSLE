@@ -83,7 +83,6 @@ clean:
 	$(RM) $(OBJS_BUILD)
 
 uninstall:
-	( cd $(OPENBLAS) && make clean)
 	( cd $(SUITESPARSE) && make uninstall)
 	$(RM) $(BIN_DIR)/*
 
