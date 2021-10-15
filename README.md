@@ -5,7 +5,7 @@ Current version is based on x86_64 linux system
 
 Dependencies:
 1. gcc && gfortran
-2. OpenBlAS or intel mkl BLAS (Recommended)
+2. intel mkl BLAS (Recommended) or OpenBlAS or native BLAS (not Recommended)
 3. SuiteSparse (need CHOLMOD modular)
 
 Install:
@@ -13,7 +13,7 @@ Install:
 ```
 make MKL_LIB=dir_path_contain_your_mkl_lib MKL_IOMP5=dir_path_contain_your_mkl_iomp5
 ```
-2. If OpenBLAS is available
+2. If OpenBLAS/other BLAS is available
 ```
 make BLAS_LIB=dir_path_contain_your_openblas
 ```
