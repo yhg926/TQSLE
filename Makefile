@@ -1,8 +1,12 @@
 CC = gcc
 
-CFLAGS =-std=gnu99 -g -Wall -O2 -fopenmp \
+OFLAGS =-std=gnu99 -g -Wall -O2 -fopenmp
+CFLAGS =-std=gnu99 -g -Wall -O2 \
 -lrt \
 -gdwarf-2
+
+OMP_CMD =-fopenmp
+
 
 BLAS_OPT =  
 
@@ -16,7 +20,8 @@ SUITESPARSE = $(CURDIR)/SuiteSparse-5.10.1
 ifdef MKL_LIB
 	ifdef MKL_IOMP5
 		BLAS_OPT = mkl
-		BLAS_CMD = -L$(MKL_LIB) -Wl,-rpath=$(MKL_LIB) -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -L$(MKL_IOMP5) -Wl,-rpath=$(MKL_IOMP5) -liomp5 -lpthread -lm
+		OMP_CMD =  -L$(MKL_IOMP5) -Wl,-rpath=$(MKL_IOMP5) -liomp5
+		BLAS_CMD = -L$(MKL_LIB) -Wl,-rpath=$(MKL_LIB) -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread $(OMP_CMD) -lpthread -lm
 	endif
 endif
 
@@ -73,11 +78,20 @@ endif
 	( cd $(SUITESPARSE) && make BLAS="$(BLAS_CMD)" )
 	$(MKDIR) $(OBJ_DIR) $(BIN_DIR) 
 
-$(APP): $(OBJS) 
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/$(APP) $(OBJS_BUILD) $(LIBS) -lm
+IOMP5_DIR =
+IOMP5 = $(shell ldd $(LPATH)/libcholmod.so | grep 'iomp5' | cut -f3 -d" " )
+IOMP5_DIR = $(shell dirname $(IOMP5))
+
+ifdef IOMP5_DIR
+	OMP_CMD = -L$(IOMP5_DIR) -Wl,-rpath=$(IOMP5_DIR) -liomp5
+endif
+
+
+$(APP): $(OBJS)
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/$(APP) $(OBJS_BUILD) $(LIBS) $(OMP_CMD) -lm
 
 %.o: %.c 
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(OBJ_DIR)/$@
+	$(CC) $(OFLAGS) $(INCLUDES) -c $< -o $(OBJ_DIR)/$@ 
 
 clean:
 	$(RM) $(OBJS_BUILD)
