@@ -86,7 +86,7 @@ ifneq ($(IOMP5),) #use ifdef cause error
 	IOMP5_DIR = $(shell dirname $(IOMP5))
 endif
 
-ifdef IOMP5_DIR
+ifneq ($(IOMP5_DIR),)
 	OMP_CMD = -L$(IOMP5_DIR) -Wl,-rpath=$(IOMP5_DIR) -liomp5
 endif
 
