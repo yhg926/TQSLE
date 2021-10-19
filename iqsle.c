@@ -17,7 +17,7 @@ const char version[] = "IQSLE v1.0";
 static struct argp_option indexOpt[] = {
     {"kmerLen", 'k', "INT", 0, "Length of kmer [31].\v"},
 	{"readLen", 'r', "INT", 0, "Length of read [100]\v"},
-	{"fragLen", 'f', "INT", 0, "Length of fragment [300]\v"},
+	{"fragLen", 'f', "INT", 0, "Length of fragment (insert size), adaptors not included [300]\v"},
     {"lamda", 'p', "DOUBLE", 0, "for solving (A'A + lamda*I)x = A'b [10].\v"},
     {"output", 'o', "STRING", 0, "Index output path.\v"},
 	{"input", 'i', "STRING", 0, "transcript reference (.fasta).\v"},
