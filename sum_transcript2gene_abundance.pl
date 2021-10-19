@@ -14,7 +14,7 @@ while(<$f>){
 	$hash{$gid} += $val ;
 }
 
-foreach $ele (keys %hash){
+foreach $ele (sort(keys %hash) ){
 	print $ele,"\t",$hash{$ele},"\n";
 	
 }
