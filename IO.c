@@ -26,9 +26,10 @@ int fprint_tref_namelen (char *tnamelen_fout, trscrpt_ref_arr_t *tref_arr){
 	return(1);
 }
 
-int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x, int neg_fix){
+int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x, double neg_fix){
 
     char line [1024];
+	int num_neg_fix = 0 ;
 
     sprintf(line,"%s/%s",quantProperty->outpath, abundance_f);
     FILE* fout = fopen(line, "w"); assert(fout!=NULL);
@@ -38,18 +39,25 @@ int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x, int n
 
     fprintf(fout,"ID\tLength\tAbundance\n");
 
+
     for(int i = 0; i< nrow ; i++ ){
         fgets(line, 1024, tname_fh);
 		*(strchr(line, '\n')) = '\0';
+		
+		if( neg_fix != 0 ) {
 
-		if(neg_fix && x[i] < 0) x[i] = 0 ; 
-			
+			if (x[i] < 0){
+				x[i] = neg_fix == 1 ? 0 : neg_fix ; 
+				num_neg_fix++;
+			}
+		}
+
         fprintf(fout,"%s\t%lf\n",line, x[i]);
     }
 
     fclose(fout);
     fclose(tname_fh);
-	return(1);
+	return(num_neg_fix);
 }
 
 

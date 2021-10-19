@@ -109,8 +109,12 @@ int quant_cmd (quantProperty_t * quantProperty) {
 	cholmod_finish(c);	
 
 	//printf results (set neg_fix to 1 to correct negative value)
-	fprint_abundance (quantProperty, rslt->nrow, rslt->x, 1);
-
+	int num_fix_neg = fprint_abundance (quantProperty, rslt->nrow, rslt->x, quantProperty->fix_neg);
+		
+	if (quantProperty->fix_neg != 0) {
+		double xv = quantProperty->fix_neg == 1 ? 0 : quantProperty->fix_neg ;		
+	printf("x: %d negative values were set to %lf\n", num_fix_neg, xv );
+	}
     return(1);
 }
 

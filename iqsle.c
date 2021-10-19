@@ -125,6 +125,7 @@ int index_cmd_wrapper (struct argp_state *state){
 static struct argp_option quantOpt[] = {
 	{"indexPath", 'i', "STRING", 0, "index path.\v"},
     {"output", 'o', "STRING", 0, "output path.\v"},
+	{"fix_neg",'x',"DOUBLE", 0, "set negtive x values to 0 (Yes:1, NO:0, set to n: n) [1]\v"},
     { 0 }
 };
 
@@ -132,6 +133,7 @@ static char quantArgsDoc[] = "*.fastq [...]";
 
 static quantProperty_t quantProperty = { 
 	0,//int num_remaining_args ;
+	1, //double fix_neg;
 	NULL, //char **remaining_args;	
 	"./" ,//char *indexpath ; 
  	"./"  //char *outpath ;
@@ -158,6 +160,13 @@ static error_t quantParse(int key, char* arg, struct argp_state* state) {
                 quantProperty.indexpath = arg;
                 break;
             }
+
+		case 'x':
+			{
+				quantProperty.fix_neg = atof(arg) ;
+				break;	
+			}
+
 	  case ARGP_KEY_ARGS:
 		{
     		quantProperty.num_remaining_args = state->argc - state->next;

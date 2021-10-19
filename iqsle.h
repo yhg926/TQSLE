@@ -15,6 +15,7 @@ typedef struct indexProperty{
 
 typedef struct quantProperty{
 	int num_remaining_args ;
+	double fix_neg;
 	char **remaining_args;
 	char *indexpath ;
     char *outpath ;
