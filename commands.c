@@ -15,7 +15,7 @@ char path_holder [256];
 
 int index_cmd (indexProperty_t* indexProperty ){
     struct timeval t1, t2; gettimeofday(&t1, NULL);
-	assert ( indexProperty->fragl > indexProperty->readl ); assert ( indexProperty->readl > indexProperty->K );
+	assert ( indexProperty->fragl >= indexProperty->readl ); assert ( indexProperty->readl >= indexProperty->K );
 	assert(indexProperty->tref_fa != NULL);
 
 	// references shorter than indexProperty->fragl will be flitered 
