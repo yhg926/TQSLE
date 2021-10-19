@@ -103,7 +103,7 @@ int quant_cmd (quantProperty_t * quantProperty) {
 
 	sprintf(path_holder,"%s/%s",quantProperty->indexpath, factorL_f);
     cholmod_factor *L = cholmod_factor_read(path_holder,c);
-    printf("\t < L loaded >\n");
+    printf("\t< L loaded >\n");
     cholmod_dense *rslt = cholmod_solve (CHOLMOD_A, L, Atb, c) ;
     gettimeofday(&t2, NULL); printf("\t< x get sloved >\t%ld s\n",  t2.tv_sec - t1.tv_sec);
 	cholmod_finish(c);	
