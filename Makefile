@@ -25,6 +25,7 @@ ifdef MKL_LIB
 	endif
 endif
 
+
 ifndef BLAS_OPT
 	ifdef BLAS_LIB
 		BLAS_OPT = blas
@@ -80,7 +81,10 @@ endif
 
 IOMP5_DIR =
 IOMP5 = $(shell ldd $(LPATH)/libcholmod.so | grep 'iomp5' | cut -f3 -d" " )
-IOMP5_DIR = $(shell dirname $(IOMP5))
+
+ifneq ($(IOMP5),) #use ifdef cause error
+	IOMP5_DIR = $(shell dirname $(IOMP5))
+endif
 
 ifdef IOMP5_DIR
 	OMP_CMD = -L$(IOMP5_DIR) -Wl,-rpath=$(IOMP5_DIR) -liomp5
@@ -101,4 +105,4 @@ uninstall:
 	$(RM) $(BIN_DIR)/*
 
 check:
-	( ldd $(BIN_DIR)/$(APP) | grep 'mkl\|blas\|not found')
+	( ldd $(BIN_DIR)/$(APP) | grep 'mkl\|blas\|omp\|not found')
