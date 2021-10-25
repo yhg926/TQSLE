@@ -70,7 +70,7 @@ int nllong = btref->n % 32 == 0 ?  btref->n/32 :  (btref->n/32 + 1);
 int l;
 
 if(is_fa)
-	printf ("[-f %d] The RNA-seq data is assumed in fasta format\n",is_fa);	
+	printf ("[-f %d] The RNA-seq data is assumed to be fasta format\n",is_fa);	
 
 
 for(int i=0;i<fn;i++){
