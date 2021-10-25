@@ -162,7 +162,11 @@ static error_t quantParse(int key, char* arg, struct argp_state* state) {
                 quantProperty.indexpath = arg;
                 break;
             }
-
+		case 'f':
+			{
+				quantProperty.is_fa = atoi(arg) ;
+				break;
+			}
 		case 'x':
 			{
 				quantProperty.fix_neg = atof(arg) ;
