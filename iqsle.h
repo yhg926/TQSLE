@@ -16,6 +16,7 @@ typedef struct indexProperty{
 typedef struct quantProperty{
 	int num_remaining_args ;
 	double fix_neg;
+	int is_fa; // read is in fastq format: 0, in fasta: 1
 	char **remaining_args;
 	char *indexpath ;
     char *outpath ;

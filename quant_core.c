@@ -49,7 +49,7 @@ basis_Kref_t* build_basisKref (tref_cat_binary_t * btref, Kref_t *Kref){
 	return (basis_Kref);
 }
 
-double * create_b (tref_cat_binary_t * btref, basis_Kref_t* basis_Kref, int fn, char *fq_f[]){
+double * create_b (tref_cat_binary_t * btref, basis_Kref_t* basis_Kref, int fn, int is_fa, char *fq_f[]){
 #define THREAD_MAX 65536
 #define FQ_LEN 4096
 char (*fq_buff)[FQ_LEN] = malloc( THREAD_MAX * FQ_LEN );
@@ -73,7 +73,10 @@ for(int i=0;i<fn;i++){
 	assert( (fh != NULL) && "File open failed in create_b()");
 
 	while (!feof(fh)) {
-		for (l = 0; l < THREAD_MAX && fgets(tmp,FQ_LEN,fh) && fgets(fq_buff[l],FQ_LEN,fh) && fgets(tmp,FQ_LEN,fh) && fgets(tmp,FQ_LEN,fh); l++) ; 
+		if(is_fa)
+			for (l = 0; l < THREAD_MAX && fgets(tmp,FQ_LEN,fh) && fgets(fq_buff[l],FQ_LEN,fh) ; l++) ;
+		else
+			for (l = 0; l < THREAD_MAX && fgets(tmp,FQ_LEN,fh) && fgets(fq_buff[l],FQ_LEN,fh) && fgets(tmp,FQ_LEN,fh) && fgets(tmp,FQ_LEN,fh); l++) ; 
 		
 #pragma omp parallel for schedule(guided) 
 		for (int t = 0 ; t < l ; t++ ){

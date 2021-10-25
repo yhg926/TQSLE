@@ -126,6 +126,7 @@ static struct argp_option quantOpt[] = {
 	{"indexPath", 'i', "STRING", 0, "index path.\v"},
     {"output", 'o', "STRING", 0, "output path.\v"},
 	{"fix_neg",'x',"DOUBLE", 0, "set negtive x values to 0 (Yes:1, NO:0, set to n: n) [1]\v"},
+	{"reads_fmt",'f',"0/1",0,"specify input reads format (fastq: 0, fasta: 1) [0]\v" },
     { 0 }
 };
 
@@ -134,6 +135,7 @@ static char quantArgsDoc[] = "*.fastq [...]";
 static quantProperty_t quantProperty = { 
 	0,//int num_remaining_args ;
 	1, //double fix_neg;
+	0, // is_fa: input reads formate 0: fastq format 1: fasta
 	NULL, //char **remaining_args;	
 	"./" ,//char *indexpath ; 
  	"./"  //char *outpath ;
