@@ -68,6 +68,11 @@ int *basis_ht = basis_Kref->basis_ht;
 int *ref = basis_Kref->ref;
 int nllong = btref->n % 32 == 0 ?  btref->n/32 :  (btref->n/32 + 1);
 int l;
+
+if(is_fa)
+	printf ("[-f %d] The RNA-seq data is assumed in fasta format\n",is_fa);	
+
+
 for(int i=0;i<fn;i++){
 	fh = fopen(fq_f[i], "r");
 	assert( (fh != NULL) && "File open failed in create_b()");
