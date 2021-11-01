@@ -421,7 +421,12 @@ Kref_mtx_t* build_Kref_mtx (ext_btref_kmer_index_t*  ext_btref_kmer_index, tref_
         int temp_tid = kmer_tids[i];
 		int temp_t_stat = temp_tid == 0? 0:(btref->tref_nxt_start)[temp_tid - 1];
         int temp_tlen = (btref->tref_nxt_start)[temp_tid] - temp_t_stat;
-        kmer_wgts[i] = (double)kmer_wgts[i] / Tsum_wghts[temp_tid] * (temp_tlen - K + 1) ; //caution: non ACGT also included here, may need modify
+		//caution: non ACGT also included here, may need modify
+        //version 0: kmer_wgts[i] = (double)kmer_wgts[i] / Tsum_wghts[temp_tid]* (temp_tlen - K + 1) ; 
+		//version 1: kmer_wgts[i] = (double)kmer_wgts[i] / Tsum_wghts[temp_tid] * (temp_tlen - K + 1) * (temp_tlen - fragl + 1) / temp_tlen ; 
+		//version 2: 
+		int mod = temp_tlen % fragl;  
+		kmer_wgts[i] = (double)kmer_wgts[i] / (double)Tsum_wghts[temp_tid] * (double) (temp_tlen - mod - (1 +  temp_tlen / fragl)*K) ;
     };
 
 	free(Tsum_wghts);
