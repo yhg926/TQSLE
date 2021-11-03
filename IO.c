@@ -30,6 +30,8 @@ int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x, doubl
 
     char line [1024];
 	int num_neg_fix = 0 ;
+	int x_sum  = 0;
+	for(int i = 0; i< nrow ; i++ ) x_sum += x[i] ;
 
     sprintf(line,"%s/%s",quantProperty->outpath, abundance_f);
     FILE* fout = fopen(line, "w"); assert(fout!=NULL);
@@ -37,8 +39,7 @@ int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x, doubl
     sprintf(line,"%s/%s",quantProperty->indexpath, tnamelen_f);
     FILE* tname_fh = fopen( line  , "r"); assert(tname_fh!=NULL);
 
-    fprintf(fout,"ID\tLength\tAbundance\n");
-
+    fprintf(fout,"ID\tLength\tAbundance\tTPM\n");
 
     for(int i = 0; i< nrow ; i++ ){
         fgets(line, 1024, tname_fh);
@@ -52,7 +53,7 @@ int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x, doubl
 			}
 		}
 
-        fprintf(fout,"%s\t%lf\n",line, x[i]);
+        fprintf(fout,"%s\t%lf\t%lf\n",line, x[i], (double)x[i] / x_sum * 1000000 );
     }
 
     fclose(fout);
