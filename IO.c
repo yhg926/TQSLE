@@ -30,7 +30,7 @@ int fprint_abundance (quantProperty_t *quantProperty, int nrow, double *x, doubl
 
     char line [1024];
 	int num_neg_fix = 0 ;
-	int x_sum  = 0;
+	double x_sum  = 0;
 	for(int i = 0; i< nrow ; i++ ) x_sum += x[i] ;
 
     sprintf(line,"%s/%s",quantProperty->outpath, abundance_f);
