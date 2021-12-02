@@ -62,7 +62,7 @@ OBJS = $(SRCS:.c=.o)
 
 OBJS_BUILD = $(shell ls $(OBJ_DIR)/*.o)
 
-APP = iqsle
+APP = tqsle
 
 RM = rm -f
 
