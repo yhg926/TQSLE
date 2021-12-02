@@ -1,5 +1,5 @@
-# IQSLEv1
-IQSLEv1 released
+# TQSLE
+TQSLE v1.0 released
 
 Current version is based on x86_64 linux system 
 
