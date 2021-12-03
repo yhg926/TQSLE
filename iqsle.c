@@ -10,7 +10,7 @@
 #include "index_core.h"
 
 
-const char version[] = "IQSLE v1.0";
+const char version[] = "TQSLE v1.0";
 
 //index command args-------- 
 
@@ -35,7 +35,7 @@ static indexProperty_t indexProperty = {
 	NULL
 	};
 
-const char indexDoc[] = "\nWelcome to use IQSLE v1.0\n";
+const char indexDoc[] = "\nWelcome to use TQSLE v1.0\n";
 
 static error_t indexParse(int key, char* arg, struct argp_state* state) {
 
@@ -141,7 +141,7 @@ static quantProperty_t quantProperty = {
  	"./"  //char *outpath ;
 };
 
-static char quantDoc[] = "\nWelcome to use rabbit v0.1\n";
+static char quantDoc[] = "\nWelcome to use TQSLE v1.0\n";
 
 static error_t quantParse(int key, char* arg, struct argp_state* state) {
 
@@ -234,7 +234,7 @@ static char mainDoc[] =
 static error_t mainParse(int key, char* arg, struct argp_state* state) {
 
     if(key ==  'v'){
-            printf("\v\t%s\n",version);
+//            printf("\v\t%s\v",version);
             return (0);
     }else if (key == ARGP_KEY_ARG){
             if (strcmp(arg, "index") == 0){
@@ -248,9 +248,9 @@ static error_t mainParse(int key, char* arg, struct argp_state* state) {
             }
     }
 	else if (key == ARGP_KEY_NO_ARGS){
-            printf("\v");
+            printf("\v\t%s\n\n",version);
             argp_state_help(state,stdout,ARGP_HELP_SHORT_USAGE);
-            printf("%s\n", mainDoc);
+            printf("%s\n",mainDoc);
             printf("\v");
 			return -1;
     }
