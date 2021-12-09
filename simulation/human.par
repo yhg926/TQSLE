@@ -34,18 +34,12 @@ FASTA	true
 # switches size selection on/off
 #
 # true|false or yes|no default: false
-FILTERING	true #false
+FILTERING	true 
 
 # turn fragmentation on/off
 #
 # true|false or yes|no default: true
 FRAGMENTATION	true
-
-# sequence motif caused by selective restriction
-# with an enzyme, choose pre-defined NlaIII, DpnII,
-# or a file with a custom position weight matrix
-#
-#FRAG_EZ_MOTIF	
 
 # Fragmentation method employed:
 # [EZ] Fragmentation by enzymatic digestion
@@ -105,7 +99,7 @@ FRAG_UR_ETA	NaN
 # set to 'NaN' to disable GC biases.
 #
 # 0.0<= number <= 1.0 default: 0.5
-GC_MEAN	0.5 #NaN
+GC_MEAN	0.5 
 
 # Standard deviation of a gaussian distribution that reflects GC bias amplification chance,
 # inactive if GC_MEAN is set to NaN.
@@ -118,7 +112,7 @@ GC_SD	0.1
 # with a file name corresponding to the identifiers of
 # the first column in the GTF annotation
 #
-GEN_DIR /data/hgyi/work/RNAseq_quantTool/flux-simulator-1.2.1-3/genome
+GEN_DIR ./genome
 
 # path to the library file of the run, either absolute
 # or relative to the location of the parameter file;
@@ -149,7 +143,7 @@ NB_MOLECULES	5000000
 # Switch on/off paired-end reads
 #
 # true|false or yes|no default: false
-PAIRED_END	true #false
+PAIRED_END	true
 
 # PCR distribution file, 'default' to use .
 # a distribution with 15 rounds and 20 bins,
@@ -191,7 +185,7 @@ READ_LENGTH	100
 # Number of reads sequenced
 #
 # number default: 5000000
-READ_NUMBER	5000000 #20000000
+READ_NUMBER	5000000
 
 # path to the GTF reference annotation, either absolute
 # or relative to the location of the parameter file
