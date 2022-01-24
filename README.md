@@ -6,7 +6,7 @@ author: Huiguang Yi (yhg926@gmail.com)
 Current version is based on x86_64 linux system 
 
 ## Dependencies:
-1. gcc && gfortran
+1. gcc && gfortran (make sure gfortran is installed)
 2. intel mkl BLAS (Recommended) or OpenBLAS or native BLAS (not Recommended)
 3. SuiteSparse (need CHOLMOD module)
 
