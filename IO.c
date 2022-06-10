@@ -15,6 +15,28 @@ const char Kref_f[] = "Kref.out";
 const char kmer_Twght_mtx_f[] = "kmer_Twght_mtx.out";
 const char factorL_f[] = "factorL.out";
 const char abundance_f[] = "abundance.out";
+const char pos2bidx_f[] = "pos2bidx.out";
+
+int write_pos2bidx (char* pos2bidx_f, pos2bidx_t *Pos2bidx){
+	FILE *fh = fopen(pos2bidx_f, "wb");
+  assert( (fh != NULL) && "File open failed in write_pos2bidx()" ) ;
+	fwrite(&(Pos2bidx->len),sizeof(int),1,fh);
+	fwrite(Pos2bidx->pos2bidx,sizeof(int),Pos2bidx->len,fh);
+	fclose(fh);
+	return(1);
+}
+
+pos2bidx_t *read_pos2bidx (char* pos2bidx_f){
+	FILE *fh = fopen(pos2bidx_f,"rb");
+	assert( (fh != NULL) && "File open failed in write_pos2bidx()" ) ;
+	pos2bidx_t *Pos2bidx = malloc(sizeof(pos2bidx_t));
+	fread(&(Pos2bidx->len),sizeof(int),1,fh);
+	Pos2bidx->pos2bidx = (int*)malloc(sizeof(int)*Pos2bidx->len) ;
+	fread(Pos2bidx->pos2bidx,sizeof(int),Pos2bidx->len,fh);	
+	fclose(fh);
+	return Pos2bidx;
+}
+
 
 int fprint_tref_namelen (char *tnamelen_fout, trscrpt_ref_arr_t *tref_arr){
 	FILE *fh = fopen(tnamelen_fout, "w");

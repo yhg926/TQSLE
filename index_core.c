@@ -307,12 +307,25 @@ ext_btref_kmer_index_t*  build_ext_btref_kmer_index (btref_kmer_index_t* btref_k
 			}
 		}
 	};
+
+	/* convert kmer_pos_ht to tref_uniq_kmer_pos array (reference kmer(pos) array),
+	 which defined the rows of A and b (2022-5-27) */
+	int *tref_uniq_kmer_pos = malloc(uniq_kmer_n * sizeof(int));
+    int j = 0;
+    for (int i = 0 ; i < htsize; i++){
+        if( kmer_pos_ht[i] != HASH_DFLT){
+            tref_uniq_kmer_pos[j] = kmer_pos_ht[i];
+            j++;
+        }
+    }
+  free(kmer_pos_ht);
+
 	ext_btref_kmer_index->K = K;
 	ext_btref_kmer_index->htsize = htsize;
 	ext_btref_kmer_index->uniq_kmer_n = uniq_kmer_n;
 	ext_btref_kmer_index->npos = npos; //# of valid pos
 	ext_btref_kmer_index->btref_kmer_index = btref_kmer_index;
-	ext_btref_kmer_index->kmer_pos_ht = kmer_pos_ht;
+	ext_btref_kmer_index->ref = tref_uniq_kmer_pos; //kmer_pos_ht;(2022-5-27)
 	ext_btref_kmer_index->kmer_pos_mtx =  kmer_pos_mtx;
 	return(ext_btref_kmer_index);
 }
@@ -343,25 +356,15 @@ static inline int t_pos2wght (int t_pos,int tlen, int fragl, int readl, int K) {
 Kref_mtx_t* build_Kref_mtx (ext_btref_kmer_index_t*  ext_btref_kmer_index, tref_cat_binary_t *btref, indexProperty_t * indexProperty){
 
     int K = indexProperty->K;
-    int htsize = ext_btref_kmer_index->htsize;
+//    int htsize = ext_btref_kmer_index->htsize;
     int uniq_kmer_n = ext_btref_kmer_index->uniq_kmer_n;
     int npos = ext_btref_kmer_index->npos;
     int noT = btref->noT;
     btref_kmer_index_t * btref_kmer_index = ext_btref_kmer_index->btref_kmer_index;
-    int *kmer_pos_ht = ext_btref_kmer_index->kmer_pos_ht;
+    // tref_uniq_kmer_pos (ref) defines the rows of A and b*/
+		int *tref_uniq_kmer_pos = ext_btref_kmer_index->ref;
     int **kmer_pos_mtx = ext_btref_kmer_index->kmer_pos_mtx;
 
-    /*build reference kmer(pos) array: tref_uniq_kmer_pos, which defined the rows of A and b*/
-    int *tref_uniq_kmer_pos = malloc(uniq_kmer_n * sizeof(int));
-    int j = 0;
-    for (int i = 0 ; i < htsize; i++){
-        if( kmer_pos_ht[i] != HASH_DFLT){
-            tref_uniq_kmer_pos[j] = kmer_pos_ht[i];
-            j++;
-        }
-    }
-	free(kmer_pos_ht);
-	printf("\t< tref_uniq_kmer_pos builed, free kmer_pos_ht >\t%ldM released\n", sizeof(int)*htsize/1024/1024);
     int *Tsum_wghts = calloc(noT, sizeof(int));
     int *kmer_tids = malloc(npos*sizeof(int));
     double *kmer_wgts = malloc(npos*sizeof(double));
@@ -469,4 +472,35 @@ cholmod_sparse* kmer_Twght_mtx2cholmod_sparse(kmer_Twght_mtx_t *kmer_Twght_mtx){
 	M->packed = 1;// TRUE if packed (nz ignored), FALSE if unpacked (nz is required)
 	return(M);
 }
+
+pos2bidx_t *build_pos2bidx(ext_btref_kmer_index_t*  ext_btref_kmer_index, tref_cat_binary_t *btref){
+	
+	pos2bidx_t *Pos2bidx = malloc(sizeof(pos2bidx_t));	
+	// set array pos2bidx default value to 0, may need use other value 
+	int* pos2bidx = calloc( btref->n, sizeof(int) );
+	
+	int uniq_kmer_n = ext_btref_kmer_index->uniq_kmer_n;
+
+	btref_kmer_index_t * btref_kmer_index = ext_btref_kmer_index->btref_kmer_index;
+	int *tref_uniq_kmer_pos = ext_btref_kmer_index->ref;
+	int **kmer_pos_mtx = ext_btref_kmer_index->kmer_pos_mtx;
+	
+	for (int i = 0; i < uniq_kmer_n; i++ )  {
+		int abs_pos = abs(tref_uniq_kmer_pos[i]) - 1 ;
+		pos2bidx[abs_pos]	= i;
+		
+		int rank = btref_kmer_index[abs_pos].kmer_hash_rank ;	
+		if(rank != KMER_HSH_RNK_DFLT) {
+			int *row = kmer_pos_mtx[rank];
+			// get pos in this row, row[0] is arrsize, shoule not be counted						
+      for(int p = 1; p < row[0]; p++)
+				pos2bidx[abs(row[p]) - 1] = i ;						
+		}	
+	}
+	Pos2bidx->len = btref->n;
+	Pos2bidx->pos2bidx = pos2bidx;
+	return Pos2bidx;
+}
+
+
 

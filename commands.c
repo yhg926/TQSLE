@@ -33,6 +33,13 @@ int index_cmd (indexProperty_t* indexProperty ){
 	ext_btref_kmer_index_t * ext_btref_kmer_index = build_ext_btref_kmer_index (btref_kmer_index, btref,  indexProperty->K);
 	gettimeofday(&t2, NULL); printf("\t< ext_btref_kmer_index builded >\t%ld s\n", t2.tv_sec - t1.tv_sec);
 	
+	pos2bidx_t *Pos2bidx =	build_pos2bidx(ext_btref_kmer_index,btref);
+	sprintf(path_holder,"%s/%s",indexProperty->outpath, pos2bidx_f);
+	write_pos2bidx(path_holder,Pos2bidx);
+	free(Pos2bidx->pos2bidx); free(Pos2bidx) ;
+	gettimeofday(&t2, NULL); printf("\t< Pos2bidx written >\t%ld s\n", t2.tv_sec - t1.tv_sec);
+	
+
 	Kref_mtx_t* Kref_mtx = build_Kref_mtx(ext_btref_kmer_index, btref, indexProperty);
 	gettimeofday(&t2, NULL); printf("\t< Kref_mtx builded and ext_btref_kmer_index freed >\t%ld s\n", t2.tv_sec - t1.tv_sec);
 
@@ -82,7 +89,14 @@ int quant_cmd (quantProperty_t * quantProperty) {
     basis_Kref_t* basis_Kref = build_basisKref(btref,Kref);
     gettimeofday(&t2, NULL); printf("\t< basis_Kref loaded >\t%ld s\n", t2.tv_sec - t1.tv_sec);
 
-    double *db = create_b (btref, basis_Kref, quantProperty->num_remaining_args, quantProperty->is_fa, quantProperty->remaining_args);
+    //double *db = create_b (btref, basis_Kref, quantProperty->num_remaining_args, quantProperty->is_fa, quantProperty->remaining_args);
+
+		sprintf(path_holder,"%s/%s",quantProperty->indexpath, pos2bidx_f);
+		pos2bidx_t * Pos2bidx = read_pos2bidx(path_holder);
+		gettimeofday(&t2, NULL); printf("\t< Pos2bidx readed >\t%ld s\n", t2.tv_sec - t1.tv_sec);
+		double *db = create_b2 (Pos2bidx, btref, basis_Kref, quantProperty->num_remaining_args, quantProperty->is_fa, quantProperty->remaining_args);		
+		gettimeofday(&t2, NULL); printf("\t< raw b created >\t%ld s\n", t2.tv_sec - t1.tv_sec);
+		free(Pos2bidx->pos2bidx); free(Pos2bidx);
 
     cholmod_common *c = (cholmod_common*)malloc(sizeof(cholmod_common));
     cholmod_start(c);

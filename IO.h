@@ -9,7 +9,10 @@ extern const char Kref_f[] ;
 extern const char kmer_Twght_mtx_f[] ;
 extern const char factorL_f[] ;
 extern const char abundance_f[] ;
+extern const char pos2bidx_f[] ; //btref sequence position to b index 
 
+int write_pos2bidx ( char* , pos2bidx_t *);
+pos2bidx_t *read_pos2bidx (char*);
 int fprint_tref_namelen (char *, trscrpt_ref_arr_t *);
 int fprint_abundance (quantProperty_t *, int, double *, double);
 int write_btref( char *, tref_cat_binary_t * );

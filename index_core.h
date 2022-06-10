@@ -43,7 +43,7 @@ typedef struct ext_btref_kmer_index{
 	int uniq_kmer_n;
 	int npos; //# of valid pos;
 	btref_kmer_index_t * btref_kmer_index;
-	int *kmer_pos_ht;
+	int *ref; //int * kmer_pos_ht;(2022-5-27)
 	int **kmer_pos_mtx;// include npos and *pos; //all pos that shared this kmer, element take minus if minor kmer from minus
 } ext_btref_kmer_index_t; // btref_kmer_index with a kmer hash table and a non-redundant kmer-position shared array
 
@@ -72,6 +72,10 @@ typedef struct Kref_mtx{
 	Kref_t *Kref; 
 } Kref_mtx_t;
 
+typedef struct pos2bidx_arr{
+	int len;
+	int * pos2bidx;
+} pos2bidx_t;
 
 trscrpt_ref_arr_t *Read_fas_trscrpt (char *, int );
 
@@ -88,6 +92,7 @@ cholmod_sparse* kmer_Twght_mtx2cholmod_sparse(kmer_Twght_mtx_t*);
 
 void free_btref(tref_cat_binary_t * );
 
+pos2bidx_t *build_pos2bidx(ext_btref_kmer_index_t*  ext_btref_kmer_index, tref_cat_binary_t *btref);
 
 #endif
 

@@ -6,7 +6,7 @@
 #define BIT1MASK 0x0000000000000001LLU
 
 #define LMAX 4096
-#define LD_FCTR 0.5
+#define LD_FCTR 0.6
 #define DEFAULT (-1)
 #define HASH_DFLT 0x7FFFFFFF //INT_MAX
 
