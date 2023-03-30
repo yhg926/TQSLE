@@ -296,13 +296,13 @@ double * create_b2 (pos2bidx_t * Pos2bidx, tref_cat_binary_t * btref, basis_Kref
 								// count b	
 							//	printf("abs_pos=%d\tread_strnd=%d\tstrnd=%d\tmatch_len=%d\tpos=%d\n",abs_pos,read_strnd,strnd,match_len,pos);									
 								if( read_strnd ==  strnd){
-									for (int p = 0; p < match_len + 1; p++ ){
+									for (int p = 0; p < match_len + 1 && pos + p < rlen -K && abs_pos < btref->n ; p++ ){
 #pragma omp atomic
             				b[pos2bidx[abs_pos++]]++;
           				}
 								}
 								else{
-									for (int p = 0; p < match_len + 1; p++ ){
+									for (int p = 0; p < match_len + 1 && pos + p < rlen -K && abs_pos >0 ; p++ ){
 #pragma omp atomic
                     b[pos2bidx[abs_pos--]]++;
                   }
