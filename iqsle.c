@@ -10,7 +10,7 @@
 #include "index_core.h"
 
 
-const char version[] = "TQSLE v1.0.0";
+const char version[] = "TQSLE v1.2";
 
 //index command args-------- 
 
