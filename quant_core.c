@@ -11,6 +11,7 @@
 #include "IO.h"
 #include "cholmod_core.h"
 #define BASISHS_DFLT (-1)
+#define THREAD_MAX 65536
 
 basis_Kref_t* build_basisKref (tref_cat_binary_t * btref, Kref_t *Kref){
 
@@ -25,20 +26,20 @@ basis_Kref_t* build_basisKref (tref_cat_binary_t * btref, Kref_t *Kref){
 	//build basis_ht which map kmer to Kref	index
 	int* basis_ht = malloc(sizeof (int) * htsize);
 	for(int i = 0; i < htsize; i++) basis_ht[i] = BASISHS_DFLT ;
-	
+
     for(int i = 0; i < Kref_size ;i++){
         int strnd  = ref[i] > 0 ? 1: -1;
         int abs_pos = abs(ref[i]) - 1;
         llong minkmer = pos2kmer(btref,nllong,strnd,abs_pos, K) ;
 
-		for(int n = 0; n < htsize; n++){
-            int hsv = HASH(minkmer,n,htsize);
-			if( basis_ht[hsv] == BASISHS_DFLT){
-				basis_ht[hsv] = i; // note here should be i, not ref[i] 
-				break;
-			}
-		}	
-    }		
+			for(int n = 0; n < htsize; n++){
+       		int hsv = HASH(minkmer,n,htsize);
+					if( basis_ht[hsv] == BASISHS_DFLT){
+						basis_ht[hsv] = i; // note here should be i, not ref[i]
+						break;
+					}
+			}	
+   }		
 	
 	basis_Kref_t* basis_Kref = malloc(sizeof(basis_Kref_t)); 
 	basis_Kref->htsize = htsize;
@@ -50,7 +51,6 @@ basis_Kref_t* build_basisKref (tref_cat_binary_t * btref, Kref_t *Kref){
 }
 
 double * create_b (tref_cat_binary_t * btref, basis_Kref_t* basis_Kref, int fn, int is_fa, char *fq_f[]){
-#define THREAD_MAX 65536
 #define FQ_LEN 4096
 char (*fq_buff)[FQ_LEN] = malloc( THREAD_MAX * FQ_LEN );
 char tmp[FQ_LEN];
@@ -141,7 +141,6 @@ cholmod_dense * make_cholmod_dense (double * b, int nrow, cholmod_common *c){
 };
 
 double * create_b2 (pos2bidx_t * Pos2bidx, tref_cat_binary_t * btref, basis_Kref_t* basis_Kref, int fn, int is_fa, char *fq_f[]){
-#define THREAD_MAX 65536
 #define FQ_LEN 4096
 #define BFQ_LEN (FQ_LEN/32) //for llong type
 	char (*fq_buff)[FQ_LEN] = malloc( THREAD_MAX * FQ_LEN );
@@ -150,6 +149,7 @@ double * create_b2 (pos2bidx_t * Pos2bidx, tref_cat_binary_t * btref, basis_Kref
 	llong (*bfq_buff)[BFQ_LEN] = malloc(THREAD_MAX * BFQ_LEN *sizeof(llong));
 //int len = Pos2bidx->len;
 	int *pos2bidx = Pos2bidx->pos2bidx;
+
 	int K = basis_Kref->K;
 	int lshft = (32-K)*2;
 	//int comp_bittl = 64 - 2*K;
@@ -161,8 +161,10 @@ double * create_b2 (pos2bidx_t * Pos2bidx, tref_cat_binary_t * btref, basis_Kref
 	int htsize = basis_Kref->htsize;
 	int *basis_ht = basis_Kref->basis_ht;
 	int *ref = basis_Kref->ref;
+	
+
 	int nllong = btref->n % 32 == 0 ?  btref->n/32 :  (btref->n/32 + 1);
-	int l;
+	int l ; 
 
 	llong *cat_tref = btref->cat_tref;
 	llong *rc_cat_tref = btref->rc_cat_tref; 
@@ -170,18 +172,17 @@ double * create_b2 (pos2bidx_t * Pos2bidx, tref_cat_binary_t * btref, basis_Kref
 	if(is_fa)
   	printf ("[-f %d] The RNA-seq data is assumed to be fasta format\n",is_fa);
 
-
 	for(int fi=0;fi<fn;fi++){
   	fh = fopen(fq_f[fi], "r");
   	assert( (fh != NULL) && "File open failed in create_b()");
-
+int readnum =0 ;
   	while (!feof(fh)) {
     	if(is_fa)
       	for (l = 0; l < THREAD_MAX && fgets(tmp,FQ_LEN,fh) && fgets(fq_buff[l],FQ_LEN,fh) ; l++) ;
     	else
       	for (l = 0; l < THREAD_MAX && fgets(tmp,FQ_LEN,fh) && fgets(fq_buff[l],FQ_LEN,fh)
 					 && fgets(tmp,FQ_LEN,fh) && fgets(tmp,FQ_LEN,fh); l++) ;
-
+readnum++;
 #pragma omp parallel for schedule(guided)
     	for (int t = 0 ; t < l ; t++ ){
 				int rlen = strlen(fq_buff[t]) - 1; // \n is omitted
@@ -205,7 +206,7 @@ double * create_b2 (pos2bidx_t * Pos2bidx, tref_cat_binary_t * btref, basis_Kref
 
 
 				int pos = 0;
-				while( pos < rlen - K ){
+				while( pos <= rlen - K ){ //pos < rlen - K
 					int match_len = 0; //read to tfref match length
 					int ind = pos/32 ;
 					int rmd = (pos % 32)*2;	
@@ -230,7 +231,7 @@ double * create_b2 (pos2bidx_t * Pos2bidx, tref_cat_binary_t * btref, basis_Kref
 					for(int n = 0; n < htsize; n++){
 						//int hsv = HASH(unituple,n,htsize);
 						int index = basis_ht[HASH(unituple,n,htsize)];// int index = basis_ht[hsv];
-						if( index == BASISHS_DFLT ) break;
+						if( index == BASISHS_DFLT )	break;
 						else { 
 							int strnd = ref[index] > 0 ? 1: -1;
 							int abs_pos = abs(ref[index]) - 1;
@@ -294,20 +295,21 @@ double * create_b2 (pos2bidx_t * Pos2bidx, tref_cat_binary_t * btref, basis_Kref
 										 match_len += 32;								 
 								} // find match length					
 								// count b	
-							//	printf("abs_pos=%d\tread_strnd=%d\tstrnd=%d\tmatch_len=%d\tpos=%d\n",abs_pos,read_strnd,strnd,match_len,pos);									
+								int p;
 								if( read_strnd ==  strnd){
-									for (int p = 0; p < match_len + 1; p++ ){
+									for ( p = 0; p < match_len + 1 && pos + p <= rlen -K && abs_pos < btref->n ; p++ ){
 #pragma omp atomic
             				b[pos2bidx[abs_pos++]]++;
           				}
 								}
 								else{
-									for (int p = 0; p < match_len + 1; p++ ){
+				       		for (p = 0; p < match_len + 1 && pos + p <= rlen -K && abs_pos >=0 ; p++ ){
 #pragma omp atomic
                     b[pos2bidx[abs_pos--]]++;
                   }
 								}
-								pos += match_len;				
+								//pos += match_len;
+									pos += p - 1; //20230613:fix bug
 								break;		
 							} // hash found element							
 						} // hash collsion						
@@ -321,7 +323,7 @@ double * create_b2 (pos2bidx_t * Pos2bidx, tref_cat_binary_t * btref, basis_Kref
 
 		fclose(fh);		
 	}// for files loop
-
+	
 	free(fq_buff);
 	free(bfq_buff);
 	return (b);

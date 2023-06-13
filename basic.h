@@ -61,6 +61,7 @@ static inline llong pos2kmer (tref_cat_binary_t *btref, int nllong, int strnd, i
         temp = ( (btref->cat_tref)[ind] << rmd ) >> lshft ;
         if( rmd > lshft )
             temp += (btref->cat_tref)[ind+1] >> (64 - rmd + lshft);
+
     }
     else{
         temp = ( (btref->rc_cat_tref)[nllong - 1 - ind] >>rmd) & (_64MASK >> lshft)  ;
@@ -68,7 +69,6 @@ static inline llong pos2kmer (tref_cat_binary_t *btref, int nllong, int strnd, i
         if(rmd > lshft )
             temp +=  ((btref->rc_cat_tref)[nllong - 2 - ind] << (64-(rmd-lshft)) ) >> lshft;
     }
-
     return (temp);
 
 }

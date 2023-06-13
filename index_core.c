@@ -151,8 +151,9 @@ tref_cat_binary_t * cat_tref_arr(trscrpt_ref_arr_t * tref_arr){
 				(btref->cat_tref) [(int)(pos / 32)] = temp;
 		}
 	}
-	int rmd = pos % 32; // take reminder
-	if( rmd < 31 ) (btref->cat_tref)[(int)(pos / 32) ] = ( temp << (64-2*rmd)) ;
+	int rmd = pos % 32; // take reminder;
+	//20230613:fixed bug:64-2*rmd -> 64-2*(rmd+1)
+	if( rmd < 31 ) (btref->cat_tref)[(int)(pos / 32) ] = ( temp << (64-2*(rmd+1))) ;
 	/*caculate rev_complete binary*/	
 	crvs_btref(btref);		
 
