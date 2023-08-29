@@ -30,5 +30,10 @@ make
 tqsle index -f<mean fragment size> -i <reference.fa> -o <outpath>
 
 # quantification 
-tqsle quant -i <indexpath> -o <outputpath>
+tqsle quant -i <indexpath> -o <outputpath> <reads.fastq>
 ```
+## Cite:
+```
+Huiguang Yi and others, A fast and globally optimal solution for RNA-seq quantification, Briefings in Bioinformatics, 2023;, bbad298, https://doi.org/10.1093/bib/bbad298
+```
+
